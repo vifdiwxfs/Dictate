@@ -9,7 +9,7 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-    
+
     steps:
     - name: Checkout repository
       uses: actions/checkout@v4
@@ -22,6 +22,13 @@ jobs:
 
     - name: Grant execute permission for gradlew
       run: chmod +x gradlew
+
+    - name: Inject Google Services JSON
+      env:
+        DATA: ${{ secrets.GOOGLE_SERVICES_JSON }}
+      run: |
+        echo $DATA | base64 -di > app/google-services.json
+        chmod 644 app/google-services.json
 
     - name: Build Debug APK
       run: ./gradlew assembleDebug
